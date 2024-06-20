@@ -81,7 +81,7 @@ If `--seconds` is not provided, the script will use the difference in duration b
 
 Example:
 ```sh
-python sync_media.py --main_file "D:\\downloads\\[CR] VINLAND SAGA - S01E01 [1080p].mkv" --audio_file "D:\\downloads\\VINLAND SAGA_S01E01_Episodio 1.mkv" --audio_delay advance --subtitle_source main
+python charly.py --main_file "D:\\downloads\\[CR] VINLAND SAGA - S01E01 [1080p].mkv" --audio_file "D:\\downloads\\VINLAND SAGA_S01E01_Episodio 1.mkv" --audio_delay advance --subtitle_source main
 ```
 
 ## Example Output
