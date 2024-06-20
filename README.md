@@ -23,7 +23,17 @@ This script synchronizes video and audio files using `ffmpeg` and performs autom
 1. Install `ffmpeg` and `ffprobe`:
    - You can download from [ffmpeg.org](https://ffmpeg.org/download.html) and follow the installation instructions for your operating system.
 
-2. Install the required Python libraries:
+2. Clone this repo
+   ```sh
+   git clone https://github.com/fe80Grau/charlyeditor.git
+   ```
+
+3. Go to charlyeditor folder
+   ```sh
+   cd charlyeditor
+   ```
+
+4. Install the required Python libraries:
    ```sh
    pip install -r requierments.txt
    ```
