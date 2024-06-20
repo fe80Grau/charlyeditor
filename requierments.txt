@@ -1,0 +1,6 @@
+ffmpeg
+argparse
+librosa
+numpy
+scipy
+tqdm
