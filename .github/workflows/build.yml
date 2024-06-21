@@ -3,10 +3,10 @@ name: Build and Release project
 on:
   push:
     tags:
-      - 'v*.*.*'  # Este workflow se ejecuta únicamente cuando se crea un tag con la versión
+      - 'v*.*.*'
 
 permissions:
-  contents: write  # Dar permisos para escribir contenidos
+  contents: write
 
 jobs:
   build:
