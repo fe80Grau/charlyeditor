@@ -108,7 +108,7 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
@@ -119,58 +119,58 @@ jobs:
         uses: actions/upload-release-asset@v1.0.2
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: artifacts/ubuntu-latest/dist/charly
+          asset_path: artifacts/ubuntu-latest/charly
           asset_name: charly-ubuntu-latest-3.10
           asset_content_type: application/octet-stream
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
 
       - name: Upload Release Asset for GUI for Ubuntu
         uses: actions/upload-release-asset@v1.0.2
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: artifacts/ubuntu-latest/dist/charly_gui
+          asset_path: artifacts/ubuntu-latest/charly_gui
           asset_name: charly_gui-ubuntu-latest-3.10
           asset_content_type: application/octet-stream
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
 
       - name: Upload Release Asset for Windows
         uses: actions/upload-release-asset@v1.0.2
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: artifacts/windows-latest/dist/charly.exe
+          asset_path: artifacts/windows-latest/charly.exe
           asset_name: charly-windows-latest-3.10.exe
           asset_content_type: application/octet-stream
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
 
       - name: Upload Release Asset for GUI for Windows
         uses: actions/upload-release-asset@v1.0.2
         with:
-          upload_url: ${{ steps.create_release.outputs/upload_url }}
-          asset_path: artifacts/windows-latest/dist/charly_gui.exe
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: artifacts/windows-latest/charly_gui.exe
           asset_name: charly_gui-windows-latest-3.10.exe
           asset_content_type: application/octet-stream
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
 
       - name: Upload Release Asset for macOS
         uses: actions/upload-release-asset@v1.0.2
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: artifacts/macos-latest/dist/charly
+          asset_path: artifacts/macos-latest/charly
           asset_name: charly-macos-latest-3.10
           asset_content_type: application/octet-stream
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
 
       - name: Upload Release Asset for GUI for macOS
         uses: actions/upload-release-asset@v1.0.2
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: artifacts/macos-latest/dist/charly_gui
+          asset_path: artifacts/macos-latest/charly_gui
           asset_name: charly_gui-macos-latest-3.10
           asset_content_type: application/octet-stream
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
