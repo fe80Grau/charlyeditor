@@ -1,13 +1,16 @@
-name: Build project
+name: Build and Release project
 
-on: [push]
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Este workflow se ejecuta únicamente cuando se crea un tag con la versión
 
 jobs:
   build:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ['3.10']  # Vamos a usar solo una versión temporalmente
+        python-version: ['3.10']
 
     runs-on: ${{ matrix.os }}
 
@@ -41,3 +44,43 @@ jobs:
       with:
         name: executables
         path: dist/
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Download build artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: executables
+        path: ./dist
+
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/charly
+        asset_name: charly-${{ matrix.os }}-${{ matrix.python-version }}
+        asset_content_type: application/octet-stream
+
+    - name: Upload Release Asset for GUI
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/charly_gui
+        asset_name: charly_gui-${{ matrix.os }}-${{ matrix.python-version }}
+        asset_content_type: application/octet-stream
