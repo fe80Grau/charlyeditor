@@ -6,7 +6,7 @@ on:
       - 'v*.*.*'
 
 permissions:
-  contents: write  # permisos necesarios para escribir contenido y crear releases
+  contents: write  # Permisos necesarios para escribir contenido y crear releases
 
 jobs:
   build:
@@ -42,13 +42,17 @@ jobs:
           pyinstaller --onefile charly.py
           pyinstaller --onefile charly_gui.py
 
-      - name: Archive build outputs
-        uses: actions/upload-artifact@v2
+      - name: Archive charly
+        uses: actions/upload-artifact@v3
         with:
-          name: executables-${{ matrix.os }}-${{ matrix.python-version }}
-          path: |
-            dist/charly*
-            dist/charly_gui*
+          name: charly-${{ matrix.os }}
+          path: dist/charly*
+      
+      - name: Archive charly_gui
+        uses: actions/upload-artifact@v3
+        with:
+          name: charly_gui-${{ matrix.os }}
+          path: dist/charly_gui*
 
   release:
     needs: build
@@ -57,30 +61,49 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        
-      - name: Create directories
+
+      - name: Download and prepare directories
         run: |
-          mkdir -p artifacts/ubuntu-latest
-          mkdir -p artifacts/windows-latest
-          mkdir -p artifacts/macos-latest
+          mkdir -p artifacts
+          for os in ubuntu-latest windows-latest macos-latest; do
+            mkdir -p artifacts/$os
+          done
 
-      - name: Download build artifacts for Ubuntu
+      - name: Download charly for Ubuntu
         uses: actions/download-artifact@v3
         with:
-          name: executables-ubuntu-latest-3.10
-          path: artifacts/ubuntu-latest
+          name: charly-ubuntu-latest
+          path: artifacts/ubuntu-latest/
 
-      - name: Download build artifacts for Windows
+      - name: Download charly_gui for Ubuntu
         uses: actions/download-artifact@v3
         with:
-          name: executables-windows-latest-3.10
-          path: artifacts/windows-latest
+          name: charly_gui-ubuntu-latest
+          path: artifacts/ubuntu-latest/
 
-      - name: Download build artifacts for macOS
+      - name: Download charly for Windows
         uses: actions/download-artifact@v3
         with:
-          name: executables-macos-latest-3.10
-          path: artifacts/macos-latest
+          name: charly-windows-latest
+          path: artifacts/windows-latest/
+
+      - name: Download charly_gui for Windows
+        uses: actions/download-artifact@v3
+        with:
+          name: charly_gui-windows-latest
+          path: artifacts/windows-latest/
+
+      - name: Download charly for macOS
+        uses: actions/download-artifact@v3
+        with:
+          name: charly-macos-latest
+          path: artifacts/macos-latest/
+
+      - name: Download charly_gui for macOS
+        uses: actions/download-artifact@v3
+        with:
+          name: charly_gui-macos-latest
+          path: artifacts/macos-latest/
 
       - name: Create GitHub Release
         id: create_release
