@@ -6,7 +6,7 @@ on:
       - 'v*.*.*'
 
 permissions:
-  contents: write  # Permisos necesarios para escribir contenido y crear releases
+  contents: write 
 
 env:
   VERSION: ${{ github.ref_name }}
@@ -22,10 +22,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4  # Asegúrate de usar la versión más reciente compatible con Node.js 20
+        uses: actions/checkout@v4 
 
       - name: Set up Python
-        uses: actions/setup-python@v4  # Ya en v4, compatible con Node.js 20
+        uses: actions/setup-python@v4 
         with:
           python-version: ${{ matrix.python-version }}
 
