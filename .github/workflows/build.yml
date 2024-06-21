@@ -14,142 +14,135 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ['3.10']
-      include:
-        - os: ubuntu-latest
-          ext: ''
-        - os: windows-latest
-          ext: '.exe'
-        - os: macos-latest
-          ext: ''
 
     runs-on: ${{ matrix.os }}
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Check Python version
-      run: python --version
+      - name: Check Python version
+        run: python --version
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-    - name: Install PyInstaller
-      run: pip install pyinstaller
+      - name: Install PyInstaller
+        run: pip install pyinstaller
 
-    - name: Build with PyInstaller
-      run: |
-        pyinstaller --onefile charly.py
-        pyinstaller --onefile charly_gui.py
+      - name: Build with PyInstaller
+        run: |
+          pyinstaller --onefile charly.py
+          pyinstaller --onefile charly_gui.py
 
-    - name: Archive build outputs
-      uses: actions/upload-artifact@v3
-      with:
-        name: executables-${{ matrix.os }}-${{ matrix.python-version }}
-        path: |
-          dist/charly${{ matrix.ext }}
-          dist/charly_gui${{ matrix.ext }}
+      - name: Archive build outputs
+        uses: actions/upload-artifact@v3
+        with:
+          name: executables-${{ matrix.os }}-${{ matrix.python-version }}
+          path: |
+            dist/charly*
+            dist/charly_gui*
 
   release:
     needs: build
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Download build artifacts for Ubuntu
-      uses: actions/download-artifact@v3
-      with:
-        name: executables-ubuntu-latest-3.10
-        path: ./ubuntu
+      - name: Download build artifacts for Ubuntu
+        uses: actions/download-artifact@v3
+        with:
+          name: executables-ubuntu-latest-3.10
+          path: ./ubuntu
 
-    - name: Download build artifacts for Windows
-      uses: actions/download-artifact@v3
-      with:
-        name: executables-windows-latest-3.10
-        path: ./windows
+      - name: Download build artifacts for Windows
+        uses: actions/download-artifact@v3
+        with:
+          name: executables-windows-latest-3.10
+          path: ./windows
 
-    - name: Download build artifacts for macOS
-      uses: actions/download-artifact@v3
-      with:
-        name: executables-macos-latest-3.10
-        path: ./macos
+      - name: Download build artifacts for macOS
+        uses: actions/download-artifact@v3
+        with:
+          name: executables-macos-latest-3.10
+          path: ./macos
 
-    - name: Create GitHub Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.PAT }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        draft: false
-        prerelease: false
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
 
-    - name: Upload Release Asset for Ubuntu
-      uses: actions/upload-release-asset@v1.0.2
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./ubuntu/dist/charly
-        asset_name: charly-ubuntu-latest-${{ matrix.python-version }}
-        asset_content_type: application/octet-stream
-      env:
-        GITHUB_TOKEN: ${{ secrets.PAT }}
+      - name: Upload Release Asset for Ubuntu
+        uses: actions/upload-release-asset@v1.0.2
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./ubuntu/dist/charly
+          asset_name: charly-ubuntu-latest-3.10
+          asset_content_type: application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
 
-    - name: Upload Release Asset for GUI for Ubuntu
-      uses: actions/upload-release-asset@v1.0.2
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./ubuntu/dist/charly_gui
-        asset_name: charly_gui-ubuntu-latest-${{ matrix.python-version }}
-        asset_content_type: application/octet-stream
-      env:
-        GITHUB_TOKEN: ${{ secrets.PAT }}
+      - name: Upload Release Asset for GUI for Ubuntu
+        uses: actions/upload-release-asset@v1.0.2
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./ubuntu/dist/charly_gui
+          asset_name: charly_gui-ubuntu-latest-3.10
+          asset_content_type: application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
 
-    - name: Upload Release Asset for Windows
-      uses: actions/upload-release-asset@v1.0.2
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./windows/dist/charly.exe
-        asset_name: charly-windows-latest-${{ matrix.python-version }}.exe
-        asset_content_type: application/octet-stream
-      env:
-        GITHUB_TOKEN: ${{ secrets.PAT }}
+      - name: Upload Release Asset for Windows
+        uses: actions/upload-release-asset@v1.0.2
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./windows/dist/charly.exe
+          asset_name: charly-windows-latest-3.10.exe
+          asset_content_type: application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
 
-    - name: Upload Release Asset for GUI for Windows
-      uses: actions/upload-release-asset@v1.0.2
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./windows/dist/charly_gui.exe
-        asset_name: charly_gui-windows-latest-${{ matrix.python-version }}.exe
-        asset_content_type: application/octet-stream
-      env:
-        GITHUB_TOKEN: ${{ secrets.PAT }}
+      - name: Upload Release Asset for GUI for Windows
+        uses: actions/upload-release-asset@v1.0.2
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./windows/dist/charly_gui.exe
+          asset_name: charly_gui-windows-latest-3.10.exe
+          asset_content_type: application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
 
-    - name: Upload Release Asset for macOS
-      uses: actions/upload-release-asset@v1.0.2
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./macos/dist/charly
-        asset_name: charly-macos-latest-${{ matrix.python-version }}
-        asset_content_type: application/octet-stream
-      env:
-        GITHUB_TOKEN: ${{ secrets.PAT }}
+      - name: Upload Release Asset for macOS
+        uses: actions/upload-release-asset@v1.0.2
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./macos/dist/charly
+          asset_name: charly-macos-latest-3.10
+          asset_content_type: application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
 
-    - name: Upload Release Asset for GUI for macOS
-      uses: actions/upload-release-asset@v1.0.2
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./macos/dist/charly_gui
-        asset_name: charly_gui-macos-latest-${{ matrix.python-version }}
-        asset_content_type: application/octet-stream
-      env:
-        GITHUB_TOKEN: ${{ secrets.PAT }}
+      - name: Upload Release Asset for GUI for macOS
+        uses: actions/upload-release-asset@v1.0.2
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./macos/dist/charly_gui
+          asset_name: charly_gui-macos-latest-3.10
+          asset_content_type: application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
