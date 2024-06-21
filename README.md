@@ -38,7 +38,13 @@ This script synchronizes video and audio files using `ffmpeg` and performs autom
    pip install -r requirements.txt
    ```
 
-## Usage
+## GUI Usage
+![image](https://github.com/fe80Grau/charlyeditor/assets/6680464/e47410d9-0099-4c7b-b566-817c62ca917b)
+```sh
+python charly_gui.py
+```
+
+## CLI Usage
 
 ### Basic Usage
 
