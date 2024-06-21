@@ -4,3 +4,5 @@ librosa
 numpy
 scipy
 tqdm
+tk
+ttkthemes
