@@ -4,11 +4,12 @@ on: [push]
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: [3.10, 3.9]  # Añadido matriz de versiones Python
+
+    runs-on: ${{ matrix.os }}
 
     steps:
     - name: Checkout code
@@ -17,7 +18,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4  # Actualizado a v4
       with:
-        python-version: 3.10  # Versión de Python corregida
+        python-version: ${{ matrix.python-version }}  # Uso de matriz de versiones
 
     - name: Install dependencies
       run: |
