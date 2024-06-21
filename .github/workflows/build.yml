@@ -66,7 +66,7 @@ jobs:
       id: create_release
       uses: actions/create-release@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.PAT }}
+        GITHUB_TOKEN: ${{ secrets.PAT }}  # Asegurarse de que se usa el PAT configurado como secreto
       with:
         tag_name: ${{ github.ref }}
         release_name: Release ${{ github.ref }}
@@ -80,6 +80,8 @@ jobs:
         asset_path: ./dist/charly
         asset_name: charly-${{ matrix.os }}-${{ matrix.python-version }}
         asset_content_type: application/octet-stream
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT }}  # Asegurarse de que se usa el PAT configurado como secreto
 
     - name: Upload Release Asset for GUI
       uses: actions/upload-release-asset@v1.0.2
@@ -88,3 +90,5 @@ jobs:
         asset_path: ./dist/charly_gui
         asset_name: charly_gui-${{ matrix.os }}-${{ matrix.python-version }}
         asset_content_type: application/octet-stream
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT }}  # Asegurarse de que se usa el PAT configurado como secreto
