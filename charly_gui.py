@@ -10,7 +10,7 @@ from charly import main
 class App:
     def __init__(self, root):
         self.root = root
-        self.root.title("Video and Audio Synchronization")
+        self.root.title("Charly Editor")
         self.root.geometry("630x400")
 
         # Styling and Layout Adjustments
