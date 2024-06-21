@@ -35,7 +35,7 @@ This script synchronizes video and audio files using `ffmpeg` and performs autom
 
 4. Install the required Python libraries:
    ```sh
-   pip install -r requierments.txt
+   pip install -r requirements.txt
    ```
 
 ## Usage
