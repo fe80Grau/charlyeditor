@@ -1,6 +1,7 @@
 argparse
 librosa
-numpy
+numpy<2
+soxr
 scipy
 tqdm
 tk

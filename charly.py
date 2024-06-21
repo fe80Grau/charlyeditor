@@ -210,3 +210,15 @@ def main(main_file, audio_file, audio_delay, output_file, seconds, use_auto_sync
     if os.path.exists(adjusted_audio):
         os.remove(adjusted_audio)
         print(f'Temporary file {adjusted_audio} removed.')
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Synchronize video and audio using ffmpeg.")
+    parser.add_argument("--main_file", required=True, help="The main file (which will contain the final video, audio, and subtitles)")
+    parser.add_argument("--audio_file", required=True, help="The secondary file (from which the additional audio will be extracted)")
+    parser.add_argument("--audio_delay", choices=['delay', 'advance'], default='delay', help="Whether to delay or advance the audio to synchronize")
+    parser.add_argument("--output_file", help="Name of the output file (optional)")
+    parser.add_argument("--seconds", type=float, help="Seconds to use for advancing or delaying the audio (optional)")
+    parser.add_argument("--use_auto_sync", action='store_true', help="Use automatic audio synchronization")
+
+    args = parser.parse_args()
+    main(args.main_file, args.audio_file, args.audio_delay, args.output_file, args.seconds, args.use_auto_sync)
