@@ -6,7 +6,7 @@ on:
       - 'v*.*.*'
 
 permissions:
-  contents: write
+  contents: write  # Permisos para escribir contenido y crear releases
 
 jobs:
   build:
@@ -43,7 +43,7 @@ jobs:
         pyinstaller --onefile charly_gui.py
 
     - name: Archive build outputs
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: executables
         path: dist/
@@ -57,7 +57,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Download build artifacts
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: executables
         path: ./dist
@@ -74,7 +74,7 @@ jobs:
         prerelease: false
 
     - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
+      uses: actions/upload-release-asset@v1.0.2
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./dist/charly
@@ -82,7 +82,7 @@ jobs:
         asset_content_type: application/octet-stream
 
     - name: Upload Release Asset for GUI
-      uses: actions/upload-release-asset@v1
+      uses: actions/upload-release-asset@v1.0.2
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./dist/charly_gui
