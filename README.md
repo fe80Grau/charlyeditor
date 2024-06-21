@@ -99,4 +99,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [numpy](https://numpy.org/)
 - [scipy](https://scipy.org/)
 - [tqdm](https://tqdm.github.io/)
-```
