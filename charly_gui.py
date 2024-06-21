@@ -47,17 +47,17 @@ class App:
         self.audio_delay_label = ttk.Label(self.root, text="Audio Delay")
         self.audio_delay_label.grid(row=3, column=0, padx=10, pady=5, sticky='w')
         self.audio_delay_var = tk.StringVar(value="delay")
-        self.audio_delay_delay = ttk.Radiobutton(self.root, text="Delay", variable=self.audio_delay_var, value="delay")
-        self.audio_delay_delay.grid(row=3, column=1, padx=10, pady=5, sticky='w')
-        self.audio_delay_advance = ttk.Radiobutton(self.root, text="Advance", variable=self.audio_delay_var, value="advance")
-        self.audio_delay_advance.grid(row=3, column=2, padx=10, pady=5, sticky='w')
+        self.audio_delay_delay = ttk.Radiobutton(self.root, text="Delay", variable=self.audio_delay_var, value="delay", state='disabled')
+        self.audio_delay_delay.grid(row=3, column=2, padx=10, pady=5, sticky='w')
+        self.audio_delay_advance = ttk.Radiobutton(self.root, text="Advance", variable=self.audio_delay_var, value="advance", state='disabled')
+        self.audio_delay_advance.grid(row=3, column=1, padx=10, pady=5, sticky='w')
 
         self.seconds_label = ttk.Label(self.root, text="Seconds (Optional)")
         self.seconds_label.grid(row=4, column=0, padx=10, pady=5, sticky='w')
-        self.seconds_entry = ttk.Entry(self.root, width=20)
+        self.seconds_entry = ttk.Entry(self.root, width=20, state='disabled')
         self.seconds_entry.grid(row=4, column=1, padx=10, pady=5)
 
-        self.use_auto_sync_var = tk.BooleanVar()
+        self.use_auto_sync_var = tk.BooleanVar(value=True)
         self.use_auto_sync_check = ttk.Checkbutton(self.root, text="Use Auto Sync", variable=self.use_auto_sync_var, command=self.toggle_auto_sync)
         self.use_auto_sync_check.grid(row=5, column=1, padx=10, pady=5, sticky='w')
 
@@ -144,5 +144,6 @@ class App:
 
 if __name__ == "__main__":
     root = ThemedTk(theme="radiance")  # Choose a more colorful, material-inspired theme
+    root.resizable(False, False)
     app = App(root)
     root.mainloop()
