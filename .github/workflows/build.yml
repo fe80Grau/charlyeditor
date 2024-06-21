@@ -8,6 +8,9 @@ on:
 permissions:
   contents: write  # Permisos necesarios para escribir contenido y crear releases
 
+env:
+  VERSION: ${{ github.ref_name }}
+
 jobs:
   build:
     strategy:
@@ -19,7 +22,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4  # Actualizar a v4 para Node.js 20
+        uses: actions/checkout@v4  # Asegúrate de usar la versión más reciente compatible con Node.js 20
 
       - name: Set up Python
         uses: actions/setup-python@v4  # Ya en v4, compatible con Node.js 20
@@ -60,7 +63,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4  # Actualizar a v4 para Node.js 20
+        uses: actions/checkout@v4  # Asegúrate de usar la versión más reciente compatible con Node.js 20
 
       - name: Create directories
         run: |
@@ -69,37 +72,37 @@ jobs:
           mkdir -p artifacts/macos-latest
 
       - name: Download charly for Ubuntu
-        uses: actions/download-artifact@v4  # Actualizar a v4 para Node.js 20
+        uses: actions/download-artifact@v4  # Asegúrate de usar la versión más reciente compatible con Node.js 20
         with:
           name: charly-ubuntu-latest
           path: artifacts/ubuntu-latest/
 
       - name: Download charly_gui for Ubuntu
-        uses: actions/download-artifact@v4  # Actualizar a v4 para Node.js 20
+        uses: actions/download-artifact@v4  # Asegúrate de usar la versión más reciente compatible con Node.js 20
         with:
           name: charly_gui-ubuntu-latest
           path: artifacts/ubuntu-latest/
 
       - name: Download charly for Windows
-        uses: actions/download-artifact@v4  # Actualizar a v4 para Node.js 20
+        uses: actions/download-artifact@v4  # Asegúrate de usar la versión más reciente compatible con Node.js 20
         with:
           name: charly-windows-latest
           path: artifacts/windows-latest/
 
       - name: Download charly_gui for Windows
-        uses: actions/download-artifact@v4  # Actualizar a v4 para Node.js 20
+        uses: actions/download-artifact@v4  # Asegúrate de usar la versión más reciente compatible con Node.js 20
         with:
           name: charly_gui-windows-latest
           path: artifacts/windows-latest/
 
       - name: Download charly for macOS
-        uses: actions/download-artifact@v4  # Actualizar a v4 para Node.js 20
+        uses: actions/download-artifact@v4  # Asegúrate de usar la versión más reciente compatible con Node.js 20
         with:
           name: charly-macos-latest
           path: artifacts/macos-latest/
 
       - name: Download charly_gui for macOS
-        uses: actions/download-artifact@v4  # Actualizar a v4 para Node.js 20
+        uses: actions/download-artifact@v4  # Asegúrate de usar la versión más reciente compatible con Node.js 20
         with:
           name: charly_gui-macos-latest
           path: artifacts/macos-latest/
@@ -108,10 +111,10 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${{ env.VERSION }}
+          release_name: Release ${{ env.VERSION }}
           draft: false
           prerelease: false
 
@@ -120,57 +123,57 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: artifacts/ubuntu-latest/charly
-          asset_name: charly-ubuntu-latest-3.10
+          asset_name: charly-ubuntu-${{ env.VERSION }}
           asset_content_type: application/octet-stream
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Release Asset for GUI for Ubuntu
         uses: actions/upload-release-asset@v1.0.2
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: artifacts/ubuntu-latest/charly_gui
-          asset_name: charly_gui-ubuntu-latest-3.10
+          asset_name: charly_gui-ubuntu-${{ env.VERSION }}
           asset_content_type: application/octet-stream
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Release Asset for Windows
         uses: actions/upload-release-asset@v1.0.2
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: artifacts/windows-latest/charly.exe
-          asset_name: charly-windows-latest-3.10.exe
+          asset_name: charly-windows-${{ env.VERSION }}.exe
           asset_content_type: application/octet-stream
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Release Asset for GUI for Windows
         uses: actions/upload-release-asset@v1.0.2
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: artifacts/windows-latest/charly_gui.exe
-          asset_name: charly_gui-windows-latest-3.10.exe
+          asset_name: charly_gui-windows-${{ env.VERSION }}.exe
           asset_content_type: application/octet-stream
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Release Asset for macOS
         uses: actions/upload-release-asset@v1.0.2
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: artifacts/macos-latest/charly
-          asset_name: charly-macos-latest-3.10
+          asset_name: charly-macos-${{ env.VERSION }}
           asset_content_type: application/octet-stream
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Release Asset for GUI for macOS
         uses: actions/upload-release-asset@v1.0.2
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: artifacts/macos-latest/charly_gui
-          asset_name: charly_gui-macos-latest-3.10
+          asset_name: charly_gui-macos-${{ env.VERSION }}
           asset_content_type: application/octet-stream
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
