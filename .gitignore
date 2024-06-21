@@ -1,5 +1,6 @@
 /charly/
 /build/
 /dist/
+/upx/
 /__pycache__/
 *.spec
