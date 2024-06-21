@@ -73,12 +73,12 @@ python charly.py --main_file "<path_to_main_video>.mkv" --audio_file "<path_to_a
 
 #### Automatic Synchronization (Better option)
 ```sh
-python charly.py --main_file "D:\\downloads\\[CR] VINLAND SAGA - S01E01 [1080p].mkv" --audio_file "D:\\downloads\\VINLAND SAGA_S01E01_Episodio 1.mkv" --use_auto_sync
+python charly.py --main_file "D:\downloads\[CR] VINLAND SAGA - S01E01 [1080p].mkv" --audio_file "D:\downloads\VINLAND SAGA_S01E01_Episodio 1.mkv" --use_auto_sync
 ```
 
 #### Specify Synchronization Seconds
 ```sh
-python charly.py --main_file "D:\\downloads\\[CR] VINLAND SAGA - S01E01 [1080p].mkv" --audio_file "D:\\downloads\\VINLAND SAGA_S01E01_Episodio 1.mkv" --seconds 16.2 --audio_delay advance
+python charly.py --main_file "D:\downloads\[CR] VINLAND SAGA - S01E01 [1080p].mkv" --audio_file "D:\downloads\VINLAND SAGA_S01E01_Episodio 1.mkv" --seconds 16.2 --audio_delay advance
 ```
 
 #### Use Time Difference Between Media Files
@@ -86,7 +86,7 @@ If `--seconds` is not provided, the script will use the difference in duration b
 
 Example:
 ```sh
-python charly.py --main_file "D:\\downloads\\[CR] VINLAND SAGA - S01E01 [1080p].mkv" --audio_file "D:\\downloads\\VINLAND SAGA_S01E01_Episodio 1.mkv" --audio_delay advance
+python charly.py --main_file "D:\downloads\[CR] VINLAND SAGA - S01E01 [1080p].mkv" --audio_file "D:\downloads\VINLAND SAGA_S01E01_Episodio 1.mkv" --audio_delay advance
 ```
 
 ## Example Output
