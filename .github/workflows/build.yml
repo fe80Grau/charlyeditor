@@ -45,7 +45,7 @@ jobs:
     - name: Archive build outputs
       uses: actions/upload-artifact@v3
       with:
-        name: executables
+        name: executables-${{ matrix.os }}-${{ matrix.python-version }}
         path: dist/
 
   release:
@@ -59,36 +59,85 @@ jobs:
     - name: Download build artifacts
       uses: actions/download-artifact@v3
       with:
-        name: executables
+        name: |
+          executables-ubuntu-latest-3.10
+          executables-windows-latest-3.10
+          executables-macos-latest-3.10
         path: ./dist
 
     - name: Create GitHub Release
       id: create_release
       uses: actions/create-release@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.PAT }}  # Asegurarse de que se usa el PAT configurado como secreto
+        GITHUB_TOKEN: ${{ secrets.PAT }}  # Usar el PAT
       with:
         tag_name: ${{ github.ref }}
         release_name: Release ${{ github.ref }}
         draft: false
         prerelease: false
 
-    - name: Upload Release Asset
+    - name: Upload Release Asset for Ubuntu
+      if: matrix.os == 'ubuntu-latest'
       uses: actions/upload-release-asset@v1.0.2
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./dist/charly
-        asset_name: charly-${{ matrix.os }}-${{ matrix.python-version }}
+        asset_name: charly-ubuntu-latest-${{ matrix.python-version }}
         asset_content_type: application/octet-stream
       env:
-        GITHUB_TOKEN: ${{ secrets.PAT }}  # Asegurarse de que se usa el PAT configurado como secreto
+        GITHUB_TOKEN: ${{ secrets.PAT }}  # Usar el PAT
 
-    - name: Upload Release Asset for GUI
+    - name: Upload Release Asset for GUI for Ubuntu
+      if: matrix.os == 'ubuntu-latest'
       uses: actions/upload-release-asset@v1.0.2
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./dist/charly_gui
-        asset_name: charly_gui-${{ matrix.os }}-${{ matrix.python-version }}
+        asset_name: charly_gui-ubuntu-latest-${{ matrix.python-version }}
         asset_content_type: application/octet-stream
       env:
-        GITHUB_TOKEN: ${{ secrets.PAT }}  # Asegurarse de que se usa el PAT configurado como secreto
+        GITHUB_TOKEN: ${{ secrets.PAT }}  # Usar el PAT
+
+    - name: Upload Release Asset for Windows
+      if: matrix.os == 'windows-latest'
+      uses: actions/upload-release-asset@v1.0.2
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/charly.exe  # Asumiendo .exe para Windows
+        asset_name: charly-windows-latest-${{ matrix.python-version }}.exe
+        asset_content_type: application/octet-stream
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT }}  # Usar el PAT
+
+    - name: Upload Release Asset for GUI for Windows
+      if: matrix.os == 'windows-latest'
+      uses: actions/upload-release-asset@v1.0.2
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/charly_gui.exe  # Asumiendo .exe para Windows
+        asset_name: charly_gui-windows-latest-${{ matrix.python-version }}.exe
+        asset_content_type: application/octet-stream
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT }}  # Usar el PAT
+
+    - name: Upload Release Asset for macOS
+      if: matrix.os == 'macos-latest'
+      uses: actions/upload-release-asset@v1.0.2
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/charly  # Asumiendo binario sin extensión para macOS
+        asset_name: charly-macos-latest-${{ matrix.python-version }}
+        asset_content_type: application/octet-stream
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT }}  # Usar el PAT
+
+    - name: Upload Release Asset for GUI for macOS
+      if: matrix.os == 'macos-latest'
+      uses: actions/upload-release-asset@v1.0.2
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/charly_gui  # Asumiendo binario sin extensión para macOS
+        asset_name: charly_gui-macos-latest-${{ matrix.python-version }}
+        asset_content_type: application/octet-stream
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT }}  # Usar el PAT
