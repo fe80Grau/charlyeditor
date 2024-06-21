@@ -82,7 +82,7 @@ python charly.py --main_file "D:\\downloads\\[CR] VINLAND SAGA - S01E01 [1080p].
 ```
 
 #### Use Time Difference Between Media Files
-If `--seconds` is not provided, the script will use the difference in duration between the media files to determine the delay or advance.
+If `--seconds` is not provided, the script will use the difference in duration between the media files for use in the delay or advance.
 
 Example:
 ```sh
