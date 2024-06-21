@@ -137,6 +137,7 @@ def adjust_audio(audio_file, adjustment, audio_delay, target_duration, codec, me
     except subprocess.CalledProcessError as e:
         raise RuntimeError(f"Error applying metadata to adjusted audio: {e.stderr}")
     finally:
+        os.remove(temp_audio)
         os.remove("metadata.txt")  # Clean up the temporary file
     
     return final_audio
