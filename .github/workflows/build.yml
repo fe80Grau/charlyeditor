@@ -19,10 +19,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4  # Actualizar a v4 para Node.js 20
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v4  # Ya en v4, compatible con Node.js 20
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -43,13 +43,13 @@ jobs:
           pyinstaller --onefile charly_gui.py
 
       - name: Archive charly
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4  # Actualizar a v4 para Node.js 20
         with:
           name: charly-${{ matrix.os }}
           path: dist/charly*
       
       - name: Archive charly_gui
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4  # Actualizar a v4 para Node.js 20
         with:
           name: charly_gui-${{ matrix.os }}
           path: dist/charly_gui*
@@ -60,47 +60,46 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4  # Actualizar a v4 para Node.js 20
 
-      - name: Download and prepare directories
+      - name: Create directories
         run: |
-          mkdir -p artifacts
-          for os in ubuntu-latest windows-latest macos-latest; do
-            mkdir -p artifacts/$os
-          done
+          mkdir -p artifacts/ubuntu-latest
+          mkdir -p artifacts/windows-latest
+          mkdir -p artifacts/macos-latest
 
       - name: Download charly for Ubuntu
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4  # Actualizar a v4 para Node.js 20
         with:
           name: charly-ubuntu-latest
           path: artifacts/ubuntu-latest/
 
       - name: Download charly_gui for Ubuntu
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4  # Actualizar a v4 para Node.js 20
         with:
           name: charly_gui-ubuntu-latest
           path: artifacts/ubuntu-latest/
 
       - name: Download charly for Windows
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4  # Actualizar a v4 para Node.js 20
         with:
           name: charly-windows-latest
           path: artifacts/windows-latest/
 
       - name: Download charly_gui for Windows
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4  # Actualizar a v4 para Node.js 20
         with:
           name: charly_gui-windows-latest
           path: artifacts/windows-latest/
 
       - name: Download charly for macOS
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4  # Actualizar a v4 para Node.js 20
         with:
           name: charly-macos-latest
           path: artifacts/macos-latest/
 
       - name: Download charly_gui for macOS
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4  # Actualizar a v4 para Node.js 20
         with:
           name: charly_gui-macos-latest
           path: artifacts/macos-latest/
@@ -149,7 +148,7 @@ jobs:
       - name: Upload Release Asset for GUI for Windows
         uses: actions/upload-release-asset@v1.0.2
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          upload_url: ${{ steps.create_release.outputs/upload_url }}
           asset_path: artifacts/windows-latest/dist/charly_gui.exe
           asset_name: charly_gui-windows-latest-3.10.exe
           asset_content_type: application/octet-stream
