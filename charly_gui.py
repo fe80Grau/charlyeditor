@@ -110,7 +110,7 @@ class App:
         # Autogenerate output file name if not provided
         if not output_file:
             base, ext = os.path.splitext(main_file)
-            output_file = f"{base}_edited{ext}"
+            output_file = f"{base}_joined{ext}"
 
         self.progress.grid(row=6, column=0, columnspan=3, padx=10, pady=10)
         self.progress.start()

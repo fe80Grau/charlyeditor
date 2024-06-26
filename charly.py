@@ -84,7 +84,7 @@ def compare_audio_sync(main_audio, secondary_audio, target_sr=22050):
         return 'advance', abs(delay)
 
 def adjust_audio(audio_file, adjustment, audio_delay, target_duration, codec, metadata):
-    temp_audio = f"temp_audio.{codec}"
+    temp_audio = f"temp_audio.wav"  # Save as WAV to avoid codec issues
     final_audio = f"final_temp_audio.{codec}"
     command = []
 
@@ -102,7 +102,7 @@ def adjust_audio(audio_file, adjustment, audio_delay, target_duration, codec, me
             'ffmpeg', '-y',
             '-i', audio_file,
             '-af', f'adelay={int(adjustment * 1000)}|{int(adjustment * 1000)},apad=whole_dur={target_duration}',
-            '-c:a', 'eac3',  # Use EAC3 codec as required by muxer
+            '-c:a', 'pcm_s16le',  # Save as WAV to avoid codec issues
             temp_audio
         ]
 
@@ -111,38 +111,31 @@ def adjust_audio(audio_file, adjustment, audio_delay, target_duration, codec, me
     except subprocess.CalledProcessError as e:
         raise RuntimeError(f"Error adjusting audio: {e.stderr}")
 
-    # Write metadata to a temporary text file
-    metadata_text = f"""[CHAPTER]
-    TIMEBASE=1/1000
-    START=0
-    END={target_duration * 1000}
-    title={metadata['title']}
-    language={metadata['language']}"""
-
-    with open("metadata.txt", "w", encoding="utf-8") as file:
-        file.write(metadata_text)
-
-    # Apply metadata to the adjusted audio using the text file
-    command_metadata = [
+    # Transcode back to original codec
+    command_transcode = [
         'ffmpeg', '-y',
         '-i', temp_audio,
-        '-i', 'metadata.txt',
-        '-map_metadata', '1',
-        '-c', 'copy',
+        '-c:a', codec,
+        '-metadata', f"title={metadata['title']}",
+        '-metadata', f"language={metadata['language']}",
         final_audio
     ]
 
     try:
-        subprocess.run(command_metadata, check=True)
+        subprocess.run(command_transcode, check=True)
     except subprocess.CalledProcessError as e:
-        raise RuntimeError(f"Error applying metadata to adjusted audio: {e.stderr}")
+        raise RuntimeError(f"Error transcoding audio: {e.stderr}")
     finally:
         os.remove(temp_audio)
-        os.remove("metadata.txt")  # Clean up the temporary file
     
     return final_audio
 
 def main(main_file, audio_file, audio_delay, output_file, seconds, use_auto_sync):
+    if not os.path.isfile(main_file):
+        raise FileNotFoundError(f"The main file does not exist: {main_file}")
+    if not os.path.isfile(audio_file):
+        raise FileNotFoundError(f"The audio file does not exist: {audio_file}")
+
     main_file_duration = get_duration(main_file)
     audio_file_duration = get_duration(audio_file)
 
@@ -178,33 +171,46 @@ def main(main_file, audio_file, audio_delay, output_file, seconds, use_auto_sync
 
     if not output_file:
         base, ext = os.path.splitext(main_file)
-        output_file = f"{base}_edited{ext}"
+        output_file = f"{base}_joined{ext}"
 
-    # Properly quoting paths to handle spaces or special characters
-    main_file_quoted = f'"{main_file}"'
-    adjusted_audio_quoted = f'"{adjusted_audio}"'
-    output_file_quoted = f'"{output_file}"'
 
-    # Build ffmpeg command for combining video and adjusted audio, ensuring proper quoting and encoding
+    # Find the number of audio streams in the output file
+    try:
+        result = subprocess.run(
+            ['ffprobe', '-v', 'error', '-select_streams', 'a', '-show_entries', 'stream=index', '-of', 'json', main_file],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            universal_newlines=True
+        )
+        audio_streams = json.loads(result.stdout).get('streams', [])
+        last_audio_index = audio_streams[-1]['index'] if audio_streams else 0
+    except Exception as e:
+        print(f"Error retrieving audio streams: {e}")
+        return
+
+    # Build ffmpeg command for combining video and adjusted audio
     command = [
         'ffmpeg', '-y',
-        '-i', main_file_quoted,
-        '-i', adjusted_audio_quoted,
+        '-i', main_file,
+        '-i', adjusted_audio,
         '-c:v', 'copy',
         '-c:a', 'copy',
         '-map', '0:v',
-        '-map', '0:a',
-        '-map', '1:a',
-        '-metadata:s:a:1', f'language={audio_metadata.get("language", "und")}',
-        '-metadata:s:a:1', f'title={audio_metadata.get("title", "untitled")}',
-        output_file_quoted
+        '-map', '0:a',  # Copy the original audio
+        '-map', '1:a',  # Add the adjusted audio
+        '-map', '0:s',  # Map all subtitle streams from the main file
+        '-metadata:s:a:' + str(last_audio_index), f'language={audio_metadata.get("language", "und")}',
+        '-metadata:s:a:' + str(last_audio_index), f'title={audio_metadata.get("title", "untitled")}',
+        output_file
     ]
 
+    # Execute ffmpeg command
     try:
-        subprocess.run(' '.join(command), check=True, shell=True)
-        print(f'Output file saved as {output_file}')
+        process = subprocess.run(command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+        print(process.stdout)
     except subprocess.CalledProcessError as e:
         print(f"Error running ffmpeg: {e.stderr}")
+        return
 
     # Remove temporary audio file
     if os.path.exists(adjusted_audio):
