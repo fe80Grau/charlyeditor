@@ -3,5 +3,4 @@
 /dist/
 /upx/
 /__pycache__/
-*.spec
 *.dev.*
