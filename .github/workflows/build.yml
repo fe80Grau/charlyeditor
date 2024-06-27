@@ -42,8 +42,8 @@ jobs:
 
       - name: Build with PyInstaller
         run: |
-          pyinstaller --onefile --additional-hooks-dir=hooks charly.spec
-          pyinstaller --onefile --additional-hooks-dir=hooks charly_gui.spec
+          pyinstaller charly.spec
+          pyinstaller charly_gui.spec
 
       - name: Archive charly
         uses: actions/upload-artifact@v4  # Actualizar a v4 para Node.js 20
